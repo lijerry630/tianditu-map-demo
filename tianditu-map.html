@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>天地图示例</title>
+  <meta charset="utf-8" />
+  <title>天地图显示当前位置</title>
   <style>
     html, body, #map {
       margin: 0;
@@ -10,14 +10,39 @@
       height: 100%;
       width: 100%;
     }
+    #info {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
   </style>
-  <script src="https://api.tianditu.gov.cn/api?v=4.0&tk=d0103ec5fcff5893054152ff0fbf270b"></script>
+  <script src="https://api.tianditu.gov.cn/api?v=4.0&tk=你的Token"></script>
 </head>
 <body>
   <div id="map"></div>
+  <div id="info">加载坐标中...</div>
+
   <script>
-    var map = new T.Map("map");
-    map.centerAndZoom(new T.LngLat(116.40969, 39.89945), 12);
+    // 获取 URL 参数
+    const params = new URLSearchParams(window.location.search);
+    const lon = parseFloat(params.get("lon")) || 116.40969;
+    const lat = parseFloat(params.get("lat")) || 39.89945;
+
+    // 初始化地图
+    const map = new T.Map("map");
+    const point = new T.LngLat(lon, lat);
+    map.centerAndZoom(point, 14);
+
+    // 添加标记
+    const marker = new T.Marker(point);
+    map.addOverLay(marker);
+
+    // 显示坐标
+    document.getElementById("info").innerText = `经度：${lon.toFixed(6)}\n纬度：${lat.toFixed(6)}`;
   </script>
 </body>
 </html>
