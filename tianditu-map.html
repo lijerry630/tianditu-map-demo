@@ -1,4 +1,66 @@
 <!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>天地图定位</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body, #mapDiv {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(255,255,255,0.9);
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 1000;
+      font-size: 14px;
+    }
+  </style>
+  <script src="https://api.tianditu.gov.cn/api?v=4.0&tk=1c0f8df3c4bfa9e991167b4cca8a5a25"></script>
+</head>
+<body>
+  <div class="info" id="info">点击地图查看经纬度</div>
+  <div id="mapDiv"></div>
+
+  <script>
+    const urlParams = new URLSearchParams(location.search);
+    const lon = parseFloat(urlParams.get("lon")) || 116.397128;
+    const lat = parseFloat(urlParams.get("lat")) || 39.916527;
+
+    const map = new T.Map("mapDiv");
+    map.centerAndZoom(new T.LngLat(lon, lat), 15);
+    map.enableScrollWheelZoom();
+
+    const marker = new T.Marker(new T.LngLat(lon, lat));
+    map.addOverLay(marker);
+
+    const info = document.getElementById("info");
+    info.innerText = `当前位置：\n经度：${lon.toFixed(6)}\n纬度：${lat.toFixed(6)}`;
+
+    // 点击地图事件
+    map.addEventListener("click", function (e) {
+      const clickLon = e.lnglat.getLng();
+      const clickLat = e.lnglat.getLat();
+
+      // 清除旧标记
+      map.clearOverLays();
+
+      // 新标记
+      const newMarker = new T.Marker(new T.LngLat(clickLon, clickLat));
+      map.addOverLay(newMarker);
+
+      info.innerText = `点击位置：\n经度：${clickLon.toFixed(6)}\n纬度：${clickLat.toFixed(6)}`;
+    });
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8" />
