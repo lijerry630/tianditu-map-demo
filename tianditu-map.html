@@ -37,6 +37,14 @@
     map.centerAndZoom(new T.LngLat(lon, lat), 15);
     map.enableScrollWheelZoom();
 
+    // ✅ 添加矢量底图图层
+    const tk = "d0103ec5fcff5893054152ff0fbf270b";
+    const vec = new T.TileLayer("vec_w", {tk: tk});
+    const cva = new T.TileLayer("cva_w", {tk: tk}); // 标注图层
+    map.addLayer(vec);
+    map.addLayer(cva);
+
+    // 添加默认标记
     const marker = new T.Marker(new T.LngLat(lon, lat));
     map.addOverLay(marker);
 
@@ -48,65 +56,12 @@
       const clickLon = e.lnglat.getLng();
       const clickLat = e.lnglat.getLat();
 
-      // 清除旧标记
       map.clearOverLays();
 
-      // 新标记
       const newMarker = new T.Marker(new T.LngLat(clickLon, clickLat));
       map.addOverLay(newMarker);
 
       info.innerText = `点击位置：\n经度：${clickLon.toFixed(6)}\n纬度：${clickLat.toFixed(6)}`;
-    });
-  </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>天地图定位</title>
-  <style>
-    html, body, #map {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-    }
-    #coords {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      padding: 8px;
-      background: white;
-      font-size: 14px;
-      border-radius: 4px;
-    }
-  </style>
-  <script src="https://api.tianditu.gov.cn/api?v=4.0&tk=d0103ec5fcff5893054152ff0fbf270b"></script>
-</head>
-<body>
-  <div id="map"></div>
-  <div id="coords">点击地图查看坐标</div>
-
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const lon = parseFloat(urlParams.get('lon')) || 116.404; // 默认北京
-    const lat = parseFloat(urlParams.get('lat')) || 39.915;
-
-    const map = new T.Map("map");
-    map.centerAndZoom(new T.LngLat(lon, lat), 14);
-
-    // 添加当前位置标注
-    const marker = new T.Marker(new T.LngLat(lon, lat));
-    map.addOverLay(marker);
-
-    // 监听地图点击事件
-    map.addEventListener("click", function (e) {
-      const clickedLng = e.lnglat.getLng().toFixed(6);
-      const clickedLat = e.lnglat.getLat().toFixed(6);
-
-      document.getElementById("coords").innerText =
-        `经度: ${clickedLng}, 纬度: ${clickedLat}`;
     });
   </script>
 </body>
